@@ -1,49 +1,81 @@
-import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
-import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
-import RecordButton from "../../components/record/RecordButton";
-import { Colors } from "../../constants/Colors";
+// app/(tabs)/index.tsx
+import RecordButton from "@/components/record/RecordButton";
+import RecordSpectrum from "@/components/record/RecordSpectrum";
+import PlayButton from "@/components/shared/PlayButton";
+import { Colors } from "@/constants/Colors";
+import { Audio } from "expo-av";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 
-const { width } = Dimensions.get("window");
-
-const HomeScreen = () => {
-  const [amplitudes, setAmplitudes] = useState<number[]>([]);
+export default function HomeScreen() {
+  const recordingRef = useRef<Audio.Recording | null>(null);
+  const [recordingUri, setRecordingUri] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-
-  const statusListener = (status: any) => {
-    if (status?.isRecording) {
-      const meteringValue = status?.metering ?? Math.random() * -60;
-      const normalized = Math.max(0.1, Math.min(1, (meteringValue + 60) / 60));
-      setAmplitudes((prev) => [...prev.slice(-150), normalized * 50]); // Keep more points and scale appropriately
-    } else {
-      setAmplitudes([]);
-    }
-  };
-
-  const audioRecorder = useAudioRecorder(
-    RecordingPresets.HIGH_QUALITY,
-    statusListener
-  );
-
-  const record = async () => {
-    await audioRecorder.prepareToRecordAsync();
-    audioRecorder.record();
-    setIsRecording(true);
-  };
-
-  const stopRecording = async () => {
-    await audioRecorder.stop();
-    setIsRecording(false);
-  };
+  const [metering, setMetering] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
-      const status = await AudioModule.requestRecordingPermissionsAsync();
-      if (!status.granted) {
-        Alert.alert("Permission to access microphone was denied");
+      const { granted } = await Audio.requestPermissionsAsync();
+      if (!granted) {
+        Alert.alert("Microphone permission denied");
       }
     })();
   }, []);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined;
+    if (isRecording) {
+      interval = setInterval(async () => {
+        const status = await recordingRef.current?.getStatusAsync();
+        if (status?.isRecording && typeof status.metering === "number") {
+          setMetering(status.metering);
+        }
+      }, 100);
+    } else {
+      if (interval) clearInterval(interval);
+      setMetering(null);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isRecording]);
+
+  const startRecording = async () => {
+    try {
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync({
+        ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
+        isMeteringEnabled: true,
+      });
+      await recording.startAsync();
+
+      recordingRef.current = recording;
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Failed to start recording", error);
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      const recording = recordingRef.current;
+      if (!recording) return;
+
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+
+      setIsRecording(false);
+      setRecordingUri(uri ?? null);
+      recordingRef.current = null;
+    } catch (error) {
+      console.error("Failed to stop recording", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,12 +84,14 @@ const HomeScreen = () => {
       </Text>
       <RecordButton
         recording={isRecording}
-        startRecording={record}
+        startRecording={startRecording}
         stopRecording={stopRecording}
       />
+      {!isRecording && recordingUri && <PlayButton uri={recordingUri} />}
+      <RecordSpectrum metering={metering} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -74,13 +108,4 @@ const styles = StyleSheet.create({
     color: Colors.dark.text,
     fontFamily: "Inter_600SemiBold",
   },
-  waveform: {
-    position: "absolute",
-    bottom: 50,
-    paddingHorizontal: 20,
-    backgroundColor: "rgba(0,0,0,0.3)", // Add background for visibility debugging
-    borderRadius: 8,
-  },
 });
-
-export default HomeScreen;
