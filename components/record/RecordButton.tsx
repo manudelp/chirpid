@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useRef } from "react";
 import { Animated, Image, Pressable, StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
+import Layout from "../../constants/Layout";
 
 interface RecordButtonProps {
   recording: boolean | null;
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     height: 150,
-    borderRadius: 75,
+    borderRadius: Layout.borderRadius.circle,
     justifyContent: "center",
     alignItems: "center",
   },

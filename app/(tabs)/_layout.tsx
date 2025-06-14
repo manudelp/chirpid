@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import Layout from "@/constants/Layout";
 import { Inter_500Medium, useFonts } from "@expo-google-fonts/inter";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -24,15 +25,16 @@ export default function TabLayout() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          paddingHorizontal: Layout.spacing.md,
         },
         tabBarItemStyle: {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          paddingTop: 10,
+          paddingTop: Layout.spacing.sm,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: Layout.fontSizes.sm,
           fontWeight: "500",
           color: Colors.dark.text,
           alignSelf: "center",
@@ -46,7 +48,7 @@ export default function TabLayout() {
           backgroundColor: Colors.dark.background,
         },
         headerTitleStyle: {
-          fontSize: 20,
+          fontSize: Layout.fontSizes.lg,
           color: Colors.dark.text,
           fontFamily: "Inter_500Medium",
         },

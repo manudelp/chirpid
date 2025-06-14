@@ -60,8 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dark.tint,
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
-    bottom: 32,
   },
 });
 

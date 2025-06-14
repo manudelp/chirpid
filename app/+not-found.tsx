@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/Colors";
+import Layout from "../constants/Layout";
 
 export default function NotFound() {
   return (
@@ -19,18 +20,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.dark.background,
-    padding: 20,
+    padding: Layout.spacing.lg,
   },
   title: {
-    fontSize: 24,
+    fontSize: Layout.fontSizes.xl,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: Layout.spacing.sm,
     color: Colors.dark.text,
     fontFamily: "Inter_700Bold",
   },
   message: {
-    fontSize: 16,
+    fontSize: Layout.fontSizes.md,
     color: Colors.dark.icon,
     fontFamily: "Inter_400Regular",
+    textAlign: "center",
   },
 });

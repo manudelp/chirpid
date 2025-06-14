@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import UploadCard from "../../components/upload/UploadCard";
 import { Colors } from "../../constants/Colors";
+import Layout from "../../constants/Layout";
 
 const ExploreScreen = () => {
   return (
@@ -17,13 +18,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
+    padding: Layout.spacing.lg,
     backgroundColor: Colors.dark.background,
   },
   title: {
-    fontSize: 22,
+    fontSize: Layout.fontSizes.xl,
     fontWeight: "600",
-    marginBottom: 20,
+    marginBottom: Layout.spacing.lg,
     color: Colors.dark.text,
     fontFamily: "Inter_600SemiBold",
   },

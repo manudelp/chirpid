@@ -3,6 +3,8 @@ import * as DocumentPicker from "expo-document-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/Colors";
+import Layout from "../../constants/Layout";
+// import LayoutUtils from "../../constants/LayoutUtils"; // Alternative approach using utilities
 import { useAudioUploader } from "../../hooks/useAudioUploader";
 
 const UploadCard = () => {
@@ -34,15 +36,17 @@ const styles = StyleSheet.create({
   uploadButton: {
     width: 150,
     height: 150,
-    borderRadius: 75,
+    borderRadius: Layout.borderRadius.circle,
     backgroundColor: Colors.dark.tint,
     justifyContent: "center",
     alignItems: "center",
   },
   fileName: {
-    fontSize: 14,
+    fontSize: Layout.fontSizes.sm,
     color: Colors.dark.text,
     fontFamily: "Inter_400Regular",
+    marginTop: Layout.spacing.md,
+    textAlign: "center",
   },
 });
 

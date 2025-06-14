@@ -1,8 +1,10 @@
 // app/(tabs)/index.tsx
 import RecordButton from "@/components/record/RecordButton";
 import RecordSpectrum from "@/components/record/RecordSpectrum";
+import ClearButton from "@/components/shared/ClearButton";
 import PlayButton from "@/components/shared/PlayButton";
 import { Colors } from "@/constants/Colors";
+import Layout from "@/constants/Layout";
 import { Audio } from "expo-av";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
@@ -87,7 +89,12 @@ export default function HomeScreen() {
         startRecording={startRecording}
         stopRecording={stopRecording}
       />
-      {!isRecording && recordingUri && <PlayButton uri={recordingUri} />}
+      {!isRecording && recordingUri && (
+        <View style={styles.buttonsContainer}>
+          <ClearButton onClear={() => setRecordingUri(null)} />
+          <PlayButton uri={recordingUri} />
+        </View>
+      )}
       <RecordSpectrum metering={metering} />
     </View>
   );
@@ -98,14 +105,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
+    padding: Layout.spacing.lg,
     backgroundColor: Colors.dark.background,
   },
   title: {
-    fontSize: 22,
+    fontSize: Layout.fontSizes.xl,
     fontWeight: "600",
-    marginBottom: 20,
+    marginBottom: Layout.spacing.lg,
     color: Colors.dark.text,
     fontFamily: "Inter_600SemiBold",
+  },
+  buttonsContainer: {
+    position: "absolute",
+    bottom: Layout.spacing.md,
+    flexDirection: "row",
+    gap: Layout.spacing.md,
+    justifyContent: "center",
+    width: "100%",
   },
 });

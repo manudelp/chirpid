@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import Layout from "@/constants/Layout";
 import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -52,14 +53,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     height: 60,
-    gap: 4,
-    paddingBottom: 16,
+    gap: Layout.spacing.xs,
+    paddingBottom: Layout.spacing.md,
     backgroundColor: Colors.dark.background,
   },
   bar: {
-    width: 4,
+    width: Layout.spacing.xs,
     backgroundColor: Colors.dark.tint,
-    borderRadius: 2,
+    borderRadius: Layout.borderRadius.sm / 2, // 3
   },
 });
 
