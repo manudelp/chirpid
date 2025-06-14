@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import Layout from "@/constants/Layout";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 interface RecordSpectrumProps {
@@ -10,20 +10,32 @@ interface RecordSpectrumProps {
 const BAR_COUNT = 40;
 
 const RecordSpectrum: React.FC<RecordSpectrumProps> = ({ metering }) => {
+  const [animationTime, setAnimationTime] = useState(0);
+
   const noiseOffsets = useMemo(
     () => Array.from({ length: BAR_COUNT }, () => Math.random() * 1000),
     []
   );
 
+  // Create animation loop to update the bars
+  useEffect(() => {
+    if (metering === null) return;
+
+    const interval = setInterval(() => {
+      setAnimationTime(Date.now());
+    }, 50); // Update every 50ms for smooth animation
+
+    return () => clearInterval(interval);
+  }, [metering]);
+
   if (metering === null) return null;
 
   const normalized = Math.max(0, Math.min(1, (metering + 60) / 60));
-  const now = performance.now();
 
   return (
     <View style={styles.container}>
       {noiseOffsets.map((offset, i) => {
-        const t = (now + offset) * 0.002;
+        const t = (animationTime + offset) * 0.002;
         const noise = Math.abs(Math.sin(t)); // pseudo-random, per-bar phase offset
         const height = 8 + 40 * normalized * noise;
         return (

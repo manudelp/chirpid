@@ -1,5 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
 import Layout from "../../constants/Layout";
@@ -16,6 +15,7 @@ const RecordButton: React.FC<RecordButtonProps> = ({
   stopRecording,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   const handlePress = async () => {
     // Scale down animation
@@ -39,18 +39,58 @@ const RecordButton: React.FC<RecordButtonProps> = ({
     }
   };
 
+  // Create pulse effect when recording
+  useEffect(() => {
+    let animationLoop: Animated.CompositeAnimation;
+
+    if (recording) {
+      animationLoop = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+
+      animationLoop.start();
+    } else {
+      pulseAnim.setValue(1);
+    }
+
+    return () => {
+      if (animationLoop) {
+        animationLoop.stop();
+      }
+    };
+  }, [recording, pulseAnim]);
+
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View
+      style={{
+        transform: [{ scale: scaleAnim }, { scale: recording ? pulseAnim : 1 }],
+      }}
+    >
       <Pressable
         style={[styles.button, recording ? styles.active : styles.inactive]}
         onPress={handlePress}
       >
         {recording ? (
-          <Ionicons name="square" size={64} color={Colors.dark.text} />
+          <Image
+            source={require("../../assets/images/logo-transparent.png")}
+            style={{ width: 120, height: 120, tintColor: "white" }}
+            resizeMode="contain"
+          />
         ) : (
           <Image
             source={require("../../assets/images/logo-transparent.png")}
-            style={{ width: 120, height: 120 }}
+            style={{ width: 120, height: 120, tintColor: Colors.dark.tint }}
             resizeMode="contain"
           />
         )}

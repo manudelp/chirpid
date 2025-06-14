@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Audio, AVPlaybackStatusSuccess } from "expo-av";
-import React, { useRef, useState } from "react";
+import { useAudioPlayer } from "expo-audio";
+import React, { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 
 interface PlayButtonProps {
@@ -11,32 +11,29 @@ interface PlayButtonProps {
 
 const PlayButton: React.FC<PlayButtonProps> = ({ uri, size = 64 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const player = useAudioPlayer({ uri });
 
   const handlePress = async () => {
     if (isPlaying) {
-      await soundRef.current?.stopAsync();
-      await soundRef.current?.unloadAsync();
-      soundRef.current = null;
+      player.pause();
       setIsPlaying(false);
     } else {
-      const { sound } = await Audio.Sound.createAsync({ uri });
-      soundRef.current = sound;
-      await sound.playAsync();
+      player.play();
       setIsPlaying(true);
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (!status.isLoaded) return;
-
-        const s = status as AVPlaybackStatusSuccess;
-        if (!s.isPlaying && s.didJustFinish) {
-          sound.unloadAsync();
-          soundRef.current = null;
-          setIsPlaying(false);
-        }
-      });
     }
   };
+
+  // Listen for when playback finishes
+  React.useEffect(() => {
+    const checkStatus = () => {
+      if (player.currentTime >= player.duration && player.duration > 0) {
+        setIsPlaying(false);
+      }
+    };
+
+    const interval = setInterval(checkStatus, 100);
+    return () => clearInterval(interval);
+  }, [player]);
 
   return (
     <Pressable

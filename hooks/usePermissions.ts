@@ -1,4 +1,4 @@
-import * as Permissions from "expo-permissions";
+import { AudioModule } from "expo-audio";
 import { useEffect, useState } from "react";
 
 export const useMicrophonePermission = () => {
@@ -6,10 +6,8 @@ export const useMicrophonePermission = () => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Permissions.askAsync(
-        Permissions.AUDIO_RECORDING
-      );
-      setGranted(status === "granted");
+      const { granted } = await AudioModule.requestRecordingPermissionsAsync();
+      setGranted(granted);
     })();
   }, []);
 
