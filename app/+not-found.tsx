@@ -1,32 +1,36 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Colors } from "../constants/Colors";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function NotFoundScreen() {
+export default function NotFound() {
   return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen does not exist.</ThemedText>
-        <Link href="/" style={styles.link}>
-          <ThemedText type="link">Go to home screen!</ThemedText>
-        </Link>
-      </ThemedView>
-    </>
+    <View style={styles.container}>
+      <Text style={styles.title}>404 - Page Not Found</Text>
+      <Text style={styles.message}>
+        The page you&apos;re looking for does not exist.
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.dark.background,
     padding: 20,
   },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: Colors.dark.text,
+    fontFamily: "Inter_700Bold",
+  },
+  message: {
+    fontSize: 16,
+    color: Colors.dark.icon,
+    fontFamily: "Inter_400Regular",
   },
 });

@@ -1,75 +1,86 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
+import React, { useEffect, useState } from "react";
+import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
+import RecordButton from "../../components/record/RecordButton";
+import { Colors } from "../../constants/Colors";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const { width } = Dimensions.get("window");
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+const HomeScreen = () => {
+  const [amplitudes, setAmplitudes] = useState<number[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+
+  const statusListener = (status: any) => {
+    if (status?.isRecording) {
+      const meteringValue = status?.metering ?? Math.random() * -60;
+      const normalized = Math.max(0.1, Math.min(1, (meteringValue + 60) / 60));
+      setAmplitudes((prev) => [...prev.slice(-150), normalized * 50]); // Keep more points and scale appropriately
+    } else {
+      setAmplitudes([]);
+    }
+  };
+
+  const audioRecorder = useAudioRecorder(
+    RecordingPresets.HIGH_QUALITY,
+    statusListener
   );
-}
+
+  const record = async () => {
+    await audioRecorder.prepareToRecordAsync();
+    audioRecorder.record();
+    setIsRecording(true);
+  };
+
+  const stopRecording = async () => {
+    await audioRecorder.stop();
+    setIsRecording(false);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const status = await AudioModule.requestRecordingPermissionsAsync();
+      if (!status.granted) {
+        Alert.alert("Permission to access microphone was denied");
+      }
+    })();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>
+        {isRecording ? "Listening..." : "Tap to Record"}
+      </Text>
+      <RecordButton
+        recording={isRecording}
+        startRecording={record}
+        stopRecording={stopRecording}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    backgroundColor: Colors.dark.background,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: 20,
+    color: Colors.dark.text,
+    fontFamily: "Inter_600SemiBold",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  waveform: {
+    position: "absolute",
+    bottom: 50,
+    paddingHorizontal: 20,
+    backgroundColor: "rgba(0,0,0,0.3)", // Add background for visibility debugging
+    borderRadius: 8,
   },
 });
+
+export default HomeScreen;
