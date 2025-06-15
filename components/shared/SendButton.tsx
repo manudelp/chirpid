@@ -1,9 +1,9 @@
 // components/shared/SendButton.tsx
+import { Colors } from "@/constants/Colors";
+import Layout from "@/constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef } from "react";
 import { Animated, Pressable, StyleSheet } from "react-native";
-import { Colors } from "../../constants/Colors";
-import Layout from "../../constants/Layout";
 
 interface SendButtonProps {
   onSend: () => void | Promise<void>;
@@ -11,6 +11,8 @@ interface SendButtonProps {
 
 const SendButton: React.FC<SendButtonProps> = ({ onSend }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const buttonSize = 150; // Large custom size for send button
+  const iconSize = 82; // Large icon for send button
 
   const handlePress = () => {
     Animated.sequence([
@@ -31,8 +33,18 @@ const SendButton: React.FC<SendButtonProps> = ({ onSend }) => {
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-      <Pressable style={styles.button} onPress={handlePress}>
-        <Ionicons name="search" size={82} color={Colors.dark.text} />
+      <Pressable
+        style={[
+          styles.button,
+          {
+            width: buttonSize,
+            height: buttonSize,
+          },
+        ]}
+        onPress={handlePress}
+        hitSlop={Layout.hitSlop.lg}
+      >
+        <Ionicons name="search" size={iconSize} color={Colors.dark.text} />
       </Pressable>
     </Animated.View>
   );
@@ -40,8 +52,6 @@ const SendButton: React.FC<SendButtonProps> = ({ onSend }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 150,
-    height: 150,
     borderRadius: Layout.borderRadius.circle,
     justifyContent: "center",
     alignItems: "center",

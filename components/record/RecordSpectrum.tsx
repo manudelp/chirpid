@@ -7,7 +7,7 @@ interface RecordSpectrumProps {
   metering: number | null;
 }
 
-const BAR_COUNT = 40;
+const BAR_COUNT = 30;
 
 const RecordSpectrum: React.FC<RecordSpectrumProps> = ({ metering }) => {
   const [animationTime, setAnimationTime] = useState(0);
@@ -23,29 +23,34 @@ const RecordSpectrum: React.FC<RecordSpectrumProps> = ({ metering }) => {
 
     const interval = setInterval(() => {
       setAnimationTime(Date.now());
-    }, 50); // Update every 50ms for smooth animation
+    }, 50);
 
     return () => clearInterval(interval);
   }, [metering]);
 
   if (metering === null) return null;
 
-  const normalized = Math.max(0, Math.min(1, (metering + 60) / 60));
+  // Use fallback value if metering is not working properly
+  const meteringValue = typeof metering === "number" ? metering : -30;
+  const normalized = Math.max(0.2, Math.min(1, (meteringValue + 60) / 60));
 
   return (
     <View style={styles.container}>
       {noiseOffsets.map((offset, i) => {
-        const t = (animationTime + offset) * 0.002;
-        const noise = Math.abs(Math.sin(t)); // pseudo-random, per-bar phase offset
-        const height = 8 + 40 * normalized * noise;
+        const t = (animationTime + offset) * 0.003;
+        const noise = (Math.sin(t) + 1) / 2;
+        const baseHeight = 12;
+        const maxHeight = 50;
+        const height = baseHeight + maxHeight * normalized * noise;
+
         return (
           <View
             key={i}
             style={[
               styles.bar,
               {
-                height,
-                opacity: 0.7 + normalized * 0.3,
+                height: Math.max(baseHeight, height),
+                opacity: Math.max(0.4, 0.6 + normalized * 0.4),
               },
             ]}
           />
@@ -64,15 +69,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "flex-end",
-    height: 60,
+    height: Layout.buttonSizes.xl + Layout.spacing.lg, // 100px equivalent
     gap: Layout.spacing.xs,
-    paddingBottom: Layout.spacing.md,
+    paddingBottom: Layout.spacing.lg,
     backgroundColor: Colors.dark.background,
   },
   bar: {
-    width: Layout.spacing.xs,
+    width: Layout.spacing.xs + 2, // 6px equivalent
     backgroundColor: Colors.dark.tint,
-    borderRadius: Layout.borderRadius.sm / 2, // 3
+    borderRadius: Layout.borderRadius.sm / 2,
+    minHeight: Layout.spacing.sm + Layout.spacing.xs, // 12px equivalent
   },
 });
 

@@ -80,6 +80,7 @@ const RecordButton: React.FC<RecordButtonProps> = ({
       <Pressable
         style={[styles.button, recording ? styles.active : styles.inactive]}
         onPress={handlePress}
+        hitSlop={Layout.hitSlop.lg}
       >
         {recording ? (
           <Image
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
   },
   inactive: {
     backgroundColor: Colors.light.background,
+    ...Layout.shadows.md,
   },
 });
 

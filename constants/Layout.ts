@@ -13,7 +13,7 @@ const Layout = {
     md: 10,
     lg: 16,
     xl: 24,
-    circle: 999, // For circular elements
+    circle: 999,
   },
 
   fontSizes: {

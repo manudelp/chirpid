@@ -21,7 +21,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors.dark.background,
           borderTopColor: Colors.dark.icon,
-          height: 100,
+          height: Layout.buttonSizes.xl + Layout.spacing.lg, // 100px equivalent
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -56,6 +56,15 @@ export default function TabLayout() {
         headerShadowVisible: false,
       }}
     >
+      <Tabs.Screen
+        name="about"
+        options={{
+          title: "About",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="information-circle" color={color} size={size} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
