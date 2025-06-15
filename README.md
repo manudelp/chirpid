@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+# ChirpID
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native App to identify bird species based on their songs and chirp sounds
 
 ## Get started
 
