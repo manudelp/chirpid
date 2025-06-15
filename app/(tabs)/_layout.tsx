@@ -15,13 +15,14 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: Colors.dark.tabIconSelected,
         tabBarInactiveTintColor: Colors.dark.tabIconDefault,
         tabBarStyle: {
           backgroundColor: Colors.dark.background,
           borderTopColor: Colors.dark.icon,
-          height: Layout.buttonSizes.xl + Layout.spacing.lg, // 100px equivalent
+          height: Layout.buttonSizes.xl + Layout.spacing.lg,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -63,6 +64,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="information-circle" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

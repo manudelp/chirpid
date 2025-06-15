@@ -82,8 +82,14 @@ const PlayButton: React.FC<PlayButtonProps> = ({ uri, size = "xl" }) => {
     };
 
     const interval = setInterval(checkStatus, 100);
-    return () => clearInterval(interval);
-  }, [player]);
+    return () => {
+      clearInterval(interval);
+      // Stop any playing audio when component unmounts
+      if (isPlaying) {
+        player.pause();
+      }
+    };
+  }, [player, isPlaying]);
   return (
     <Pressable
       onPress={handlePress}
