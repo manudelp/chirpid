@@ -8,6 +8,13 @@
     "scheme": "chirpid",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "platforms": ["ios", "android", "web"],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f857d214-ff90-4700-aa8a-785f925f1874"
+    },
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -19,7 +26,15 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
+      "package": "com.manu.chirpid",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
@@ -28,6 +43,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-updates",
       [
         "expo-audio",
         {
@@ -46,6 +62,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f857d214-ff90-4700-aa8a-785f925f1874"
+      }
     }
   }
 }
