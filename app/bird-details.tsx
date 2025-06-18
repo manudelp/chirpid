@@ -149,7 +149,11 @@ export default function BirdDetailsScreen() {
             </View>
           ) : wikiError ? (
             <View style={styles.errorContainer}>
-              <Ionicons name="warning-outline" size={24} color="#FF6B6B" />
+              <Ionicons
+                name="warning-outline"
+                size={24}
+                color={Colors.dark.warning}
+              />
               <Text style={styles.errorText}>
                 Unable to load detailed information
               </Text>
@@ -189,15 +193,6 @@ export default function BirdDetailsScreen() {
               )}
             </>
           )}
-        </View>
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={styles.recordAgainButton}
-            onPress={() => router.push("/(tabs)")}
-          >
-            <Ionicons name="mic" size={20} color={Colors.dark.background} />
-            <Text style={styles.recordAgainText}>Record Another Bird</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

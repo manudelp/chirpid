@@ -11,7 +11,7 @@ import { pollMetering, requestRecordingPermissions } from "@/lib/recorder";
 import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
@@ -149,7 +149,11 @@ export default function HomeScreen() {
               return handleUploadAudio(recordingUri);
           }}
         />
-      ) : null}
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.dark.text} />
+        </View>
+      )}
 
       {!isRecording && recordingUri && (
         <View style={styles.buttonsContainer}>
@@ -169,6 +173,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Layout.spacing.lg,
     backgroundColor: Colors.dark.background,
+  },
+  loadingContainer: {
+    width: 150,
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.dark.tint,
+    borderRadius: Layout.borderRadius.circle,
+    marginVertical: Layout.spacing.lg,
   },
   title: {
     fontSize: Layout.fontSizes.xl,
