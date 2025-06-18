@@ -27,8 +27,11 @@ export const Colors = {
     linkHover: "#0891B2",
     // Status colors
     success: "#16A34A",
+    successBackground: "#E3F9E5",
     warning: "#F59E0B",
+    warningBackground: "#FFF7ED",
     error: "#DC2626",
+    errorBackground: "#FEE2E2",
   },
   dark: {
     text: "#ECEDEE",
@@ -50,7 +53,10 @@ export const Colors = {
     linkHover: "#67E8F9",
     // Status colors
     success: "#4ADE80",
+    successBackground: "rgba(76, 175, 80, 0.1)",
     warning: "#FBBF24",
+    warningBackground: "#4A3C1D",
     error: "#F87171",
+    errorBackground: "#4A1D1D",
   },
 };

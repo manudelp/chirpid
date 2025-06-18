@@ -4,27 +4,47 @@ import SendButton from "@/components/shared/SendButton";
 import UploadCard from "@/components/upload/UploadCard";
 import { Colors } from "@/constants/Colors";
 import Layout from "@/constants/Layout";
-import { uploadAudio, UploadResponse } from "@/lib/api";
+import { useBirdHistory } from "@/contexts/BirdHistoryContext";
+import { uploadAudio } from "@/lib/api";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function UploadScreen() {
   const [recordingUri, setRecordingUri] = useState<string | null>(null);
   const [clearTrigger, setClearTrigger] = useState(false);
-  const [identificationResult, setIdentificationResult] =
-    useState<UploadResponse | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-
+  const { addBirdToHistory } = useBirdHistory();
   const handleUploadAudio = async (uri: string) => {
     try {
       setIsUploading(true);
       console.log("Uploading audio to backend...");
       const response = await uploadAudio(uri);
-      setIdentificationResult(response);
       setRecordingUri(null);
       setClearTrigger(true);
       // Reset the trigger after a brief moment
-      setTimeout(() => setClearTrigger(false), 100);
+      setTimeout(() => setClearTrigger(false), 100); // Add bird to history if identification was successful
+      if (response.success && response.result) {
+        addBirdToHistory({
+          species: response.result.species,
+          scientificName: response.result.scientificName,
+          confidence: response.result.confidence,
+          audioUri: uri,
+        });
+
+        // Navigate to bird details screen
+        router.push({
+          pathname: "/bird-details",
+          params: {
+            id: response.id || `upload_${Date.now()}`,
+            species: response.result.species,
+            scientificName: response.result.scientificName || "",
+            confidence: response.result.confidence.toString(),
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
     } catch (error) {
       console.error("Failed to send chirp:", error);
       const errorMessage =
@@ -41,10 +61,8 @@ function UploadScreen() {
       setIsUploading(false);
     }
   };
-
   const handleClearAudio = () => {
     setRecordingUri(null);
-    setIdentificationResult(null);
     setClearTrigger(true);
     // Reset the trigger after a brief moment
     setTimeout(() => setClearTrigger(false), 100);
@@ -54,83 +72,42 @@ function UploadScreen() {
     setRecordingUri(uri);
     setClearTrigger(false);
   };
-
   return (
-    <View style={styles.container}>
-      {identificationResult ? (
-        // Show identification result
-        <View style={styles.resultContainer}>
-          <Text style={styles.title}>Bird Identified!</Text>
-          <Text style={styles.speciesName}>
-            {identificationResult.result?.species}
-          </Text>
-          {identificationResult.result?.scientificName && (
-            <Text style={styles.scientificName}>
-              {identificationResult.result.scientificName}
-            </Text>
-          )}
-          {identificationResult.result?.confidence && (
-            <Text style={styles.confidence}>
-              {`Confidence: ${Math.round(
-                identificationResult.result.confidence * 100
-              )}%`}
-            </Text>
-          )}
-          <Text style={styles.subtitle}>
-            Select another audio file to identify more birds
-          </Text>
-        </View>
-      ) : (
-        // Show upload interface
-        <>
-          <Text style={styles.title}>
-            {isUploading
-              ? "Analyzing..."
-              : recordingUri
-              ? "Analyze Chirp"
-              : "Upload Audio"}
-          </Text>
+    <SafeAreaView style={styles.container} edges={["bottom"]}>
+      <Text style={styles.title}>
+        {isUploading
+          ? "Analyzing..."
+          : recordingUri
+          ? "Analyze Chirp"
+          : "Upload Audio"}
+      </Text>
 
-          {!recordingUri && (
-            <Text style={styles.subtitle}>
-              {isUploading
-                ? "Please wait while we identify the bird..."
-                : "Select an audio file from your device"}
-            </Text>
-          )}
-
-          {recordingUri && !isUploading && (
-            <Text style={styles.subtitle}>
-              Send to identify the bird species
-            </Text>
-          )}
-
-          {isUploading && (
-            <Text style={styles.subtitle}>
-              Please wait while we identify the bird...
-            </Text>
-          )}
-        </>
+      {!recordingUri && (
+        <Text style={styles.subtitle}>
+          {isUploading
+            ? "Please wait while we identify the bird..."
+            : "Select an audio file from your device"}
+        </Text>
       )}
 
-      {/* Show upload card if no result */}
-      {!identificationResult && !recordingUri && !isUploading ? (
+      {recordingUri && !isUploading && (
+        <Text style={styles.subtitle}>Send to identify the bird species</Text>
+      )}
+
+      {isUploading && (
+        <Text style={styles.subtitle}>
+          Please wait while we identify the bird...
+        </Text>
+      )}
+
+      {/* Show upload card when no recording is selected */}
+      {!recordingUri && !isUploading ? (
         <UploadCard
           onAudioSelected={handleAudioSelected}
           onAudioCleared={handleClearAudio}
           shouldClear={clearTrigger}
         />
-      ) : identificationResult ? (
-        // Show upload card again after result to upload another file
-        <UploadCard
-          onAudioSelected={(uri) => {
-            setIdentificationResult(null);
-            handleAudioSelected(uri);
-          }}
-          onAudioCleared={handleClearAudio}
-          shouldClear={clearTrigger}
-        />
-      ) : (
+      ) : recordingUri && !isUploading ? (
         // Show send button when file is selected
         <SendButton
           onSend={() => {
@@ -138,15 +115,15 @@ function UploadScreen() {
               return handleUploadAudio(recordingUri);
           }}
         />
-      )}
+      ) : null}
 
-      {recordingUri && !identificationResult && (
+      {recordingUri && !isUploading && (
         <View style={styles.buttonsContainer}>
           <ClearButton onClear={handleClearAudio} />
           <PlayButton uri={recordingUri} />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -175,35 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.md,
     paddingHorizontal: Layout.spacing.lg,
     minHeight: 48,
-  },
-  resultContainer: {
-    alignItems: "center",
-    paddingHorizontal: Layout.spacing.lg,
-  },
-  speciesName: {
-    fontSize: Layout.fontSizes.xxl,
-    fontWeight: "700",
-    color: Colors.dark.text,
-    fontFamily: "Inter_700Bold",
-    textAlign: "center",
-    marginBottom: Layout.spacing.sm,
-  },
-  scientificName: {
-    fontSize: Layout.fontSizes.lg,
-    fontStyle: "italic",
-    color: Colors.dark.text,
-    opacity: 0.8,
-    fontFamily: "Inter_400Regular",
-    textAlign: "center",
-    marginBottom: Layout.spacing.md,
-  },
-  confidence: {
-    fontSize: Layout.fontSizes.md,
-    color: Colors.dark.text,
-    opacity: 0.7,
-    fontFamily: "Inter_500Medium",
-    textAlign: "center",
-    marginBottom: Layout.spacing.lg,
   },
   buttonsContainer: {
     position: "absolute",
