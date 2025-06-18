@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     height: Layout.buttonSizes.xl + Layout.spacing.lg, // 100px equivalent
     gap: Layout.spacing.xs,
     paddingBottom: Layout.spacing.lg,
-    backgroundColor: Colors.dark.background,
   },
   bar: {
     width: Layout.spacing.xs + 2, // 6px equivalent

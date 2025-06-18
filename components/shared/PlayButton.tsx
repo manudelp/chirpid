@@ -10,7 +10,7 @@ interface PlayButtonProps {
   size?: keyof typeof Layout.buttonSizes;
 }
 
-const PlayButton: React.FC<PlayButtonProps> = ({ uri, size = "xl" }) => {
+const PlayButton: React.FC<PlayButtonProps> = ({ uri, size = "lg" }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useAudioPlayer({ uri });
   const buttonSize = Layout.buttonSizes[size];

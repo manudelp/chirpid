@@ -10,7 +10,7 @@ interface ClearButtonProps {
   size?: keyof typeof Layout.buttonSizes;
 }
 
-const ClearButton: React.FC<ClearButtonProps> = ({ onClear, size = "xl" }) => {
+const ClearButton: React.FC<ClearButtonProps> = ({ onClear, size = "lg" }) => {
   const buttonSize = Layout.buttonSizes[size];
   const iconSize =
     size === "sm"
