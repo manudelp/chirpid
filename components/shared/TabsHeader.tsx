@@ -2,6 +2,7 @@ import { Colors } from "@/constants/Colors";
 import Layout from "@/constants/Layout";
 import { useBirdHistory } from "@/contexts/BirdHistoryContext";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,7 +12,18 @@ export default function TabsHeader() {
   return (
     <SafeAreaView edges={["top"]} style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.title}>ChirpID</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            source={require("@/assets/images/logo-transparent.png")}
+            style={{
+              width: 32,
+              height: 32,
+              marginRight: Layout.spacing.xs,
+              tintColor: Colors.dark.text,
+            }}
+          />
+          <Text style={styles.title}>ChirpID</Text>
+        </View>
         <TouchableOpacity
           style={styles.historyButton}
           onPress={() => setHistoryVisible(true)}
@@ -41,8 +53,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Layout.spacing.lg,
     paddingVertical: Layout.spacing.md,
     backgroundColor: Colors.dark.background,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.dark.icon,
   },
   title: {
     fontSize: Layout.fontSizes.lg,

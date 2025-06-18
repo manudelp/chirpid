@@ -111,7 +111,6 @@ export default function BirdDetailsScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {" "}
         {/* Bird Image */}
         {displayImage ? (
           <Image source={{ uri: displayImage }} style={styles.birdImage} />
@@ -147,7 +146,7 @@ export default function BirdDetailsScreen() {
               minute: "2-digit",
             })}
           </Text>
-        </View>{" "}
+        </View>
         {/* Additional Information */}
         <View style={styles.detailsContainer}>
           {wikiLoading ? (
@@ -171,47 +170,6 @@ export default function BirdDetailsScreen() {
                   <Text style={styles.sectionContent}>
                     {displayDescription}
                   </Text>
-
-                  {/* Only show fields if they exist in the bird data */}
-                  {bird.habitat && (
-                    <InfoRow
-                      icon="home-outline"
-                      title="Habitat"
-                      content={bird.habitat}
-                    />
-                  )}
-
-                  {bird.diet && (
-                    <InfoRow
-                      icon="restaurant-outline"
-                      title="Diet"
-                      content={bird.diet}
-                    />
-                  )}
-
-                  {bird.size && (
-                    <InfoRow
-                      icon="resize-outline"
-                      title="Size"
-                      content={bird.size}
-                    />
-                  )}
-
-                  {bird.wingspan && (
-                    <InfoRow
-                      icon="airplane-outline"
-                      title="Wingspan"
-                      content={bird.wingspan}
-                    />
-                  )}
-
-                  {bird.conservationStatus && (
-                    <InfoRow
-                      icon="shield-checkmark-outline"
-                      title="Conservation Status"
-                      content={bird.conservationStatus}
-                    />
-                  )}
 
                   {/* Wikipedia Attribution */}
                   {wikiInfo && !wikiError && (
@@ -250,24 +208,6 @@ export default function BirdDetailsScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-}
-
-interface InfoRowProps {
-  icon: keyof typeof Ionicons.glyphMap;
-  title: string;
-  content: string;
-}
-
-function InfoRow({ icon, title, content }: InfoRowProps) {
-  return (
-    <View style={styles.infoRow}>
-      <View style={styles.infoHeader}>
-        <Ionicons name={icon} size={20} color={Colors.dark.tint} />
-        <Text style={styles.infoTitle}>{title}</Text>
-      </View>
-      <Text style={styles.infoContent}>{content}</Text>
-    </View>
   );
 }
 

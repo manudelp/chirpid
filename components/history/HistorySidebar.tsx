@@ -48,7 +48,6 @@ export default function HistorySidebar() {
         style={styles.birdItem}
         onPress={() => navigateToBirdDetails(item)}
       >
-        {" "}
         <View style={styles.birdItemContent}>
           {displayImage ? (
             <View style={styles.imageContainer}>
@@ -80,7 +79,7 @@ export default function HistorySidebar() {
               <Text style={styles.scientificName} numberOfLines={1}>
                 {item.scientificName}
               </Text>
-            )}{" "}
+            )}
             <Text style={styles.timestamp}>
               {item.timestamp.toLocaleDateString()} at{" "}
               {item.timestamp.toLocaleTimeString([], {
