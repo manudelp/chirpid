@@ -64,6 +64,8 @@ export async function validateAudioDuration(uri: string): Promise<void> {
           clearInterval(check);
           if (player.duration > 60) {
             reject(new Error("Audio file must be 60 seconds or less"));
+          } else if (player.duration < 5) {
+            reject(new Error("Audio file must be at least 5 seconds long"));
           } else {
             resolve();
           }
@@ -110,17 +112,43 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
     }
 
     // For now, return a dummy response until backend logic is implemented
-    // TODO: Remove this dummy response when backend returns real bird identification
-    const dummyResponse: UploadResponse = {
-      success: true,
-      id: `upload_${Date.now()}`,
-      message: "Bird identification completed",
-      result: {
-        species: "American Robin",
-        confidence: 0.87,
-        scientificName: "Turdus migratorius",
+    // TODO: Remove these dummy responses when backend returns real bird identification
+    const dummyResponses: UploadResponse[] = [
+      {
+        success: true,
+        id: `upload_${Date.now()}`,
+        message: "Bird identification completed",
+        result: {
+          species: "American Robin",
+          confidence: 0.87,
+          scientificName: "Turdus migratorius",
+        },
       },
-    };
+      {
+        success: true,
+        id: `upload_${Date.now()}`,
+        message: "Bird identification completed",
+        result: {
+          species: "Northern Cardinal",
+          confidence: 0.92,
+          scientificName: "Cardinalis cardinalis",
+        },
+      },
+      {
+        success: true,
+        id: `upload_${Date.now()}`,
+        message: "Bird identification completed",
+        result: {
+          species: "Blue Jay",
+          confidence: 0.84,
+          scientificName: "Cyanocitta cristata",
+        },
+      },
+    ];
+
+    // Select a random response from the array
+    const dummyResponse =
+      dummyResponses[Math.floor(Math.random() * dummyResponses.length)];
 
     // Simulate processing delay
     await new Promise((resolve) => setTimeout(resolve, 1500));

@@ -25,18 +25,19 @@ function TabsContent() {
           tabBarInactiveTintColor: Colors.dark.tabIconDefault,
           tabBarStyle: {
             backgroundColor: Colors.dark.background,
-            borderTopColor: Colors.dark.icon,
-            height: Layout.buttonSizes.xl + Layout.spacing.lg,
+            borderTopWidth: 0,
+            height: Layout.buttonSizes.xl,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            paddingHorizontal: Layout.spacing.md,
           },
           tabBarItemStyle: {
+            marginTop: Layout.spacing.sm,
+            marginBottom: Layout.spacing.sm,
+            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            paddingTop: Layout.spacing.sm,
           },
           tabBarLabelStyle: {
             fontSize: Layout.fontSizes.sm,

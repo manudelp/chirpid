@@ -1,28 +1,55 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { Platform, Share } from "react-native";
 
 interface ShareButtonProps {
   onClick?: () => void;
   className?: string;
+  title: string;
+  url: string;
+  message: string;
 }
 
 const ShareButton: React.FC<ShareButtonProps> = ({
   onClick,
   className = "",
+  title,
+  url,
+  message = "",
 }) => {
-  const handleShare = () => {
+  const handleShare = async () => {
     if (onClick) {
       onClick();
-    } else if (navigator.share) {
-      navigator
-        .share({
-          title: document.title,
-          url: window.location.href,
-        })
-        .catch((err) => console.error("Error sharing:", err));
-    } else {
+      return;
+    }
+
+    try {
+      // For React Native environments (iOS/Android native apps)
+      if (Platform?.OS === "ios" || Platform?.OS === "android") {
+        await Share.share({
+          title,
+          message: message || url,
+          url,
+        });
+        return;
+      }
+
+      // For web browsers supporting Web Share API
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({
+          title,
+          url,
+          text: message,
+        });
+        return;
+      }
+
+      // Fallback for unsupported browsers
       console.log("Web Share API not supported");
-      // Could implement a custom share dialog here
+      // Here you could implement a custom share dialog
+      // or copy to clipboard functionality
+    } catch (error) {
+      console.error("Error sharing:", error);
     }
   };
 

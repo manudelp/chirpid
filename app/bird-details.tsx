@@ -33,13 +33,7 @@ export default function BirdDetailsScreen() {
     scientificName: params.scientificName as string,
     confidence: parseFloat(params.confidence as string),
     timestamp: new Date(params.timestamp as string),
-    habitat: params.habitat as string,
-    diet: params.diet as string,
-    size: params.size as string,
-    wingspan: params.wingspan as string,
     description: params.description as string,
-    conservationStatus: params.conservationStatus as string,
-    imageUrl: params.imageUrl as string,
     wikipediaImageUrl: params.wikipediaImageUrl as string,
   };
 
@@ -80,9 +74,8 @@ export default function BirdDetailsScreen() {
   }, [bird.species, bird.scientificName]);
 
   // Use Wikipedia data if available, otherwise fall back to bird data
-  const displayImage =
-    bird.wikipediaImageUrl || wikiInfo?.thumbnailUrl || bird.imageUrl;
-  const displayDescription = wikiInfo?.description || bird.description;
+  const displayImage = bird.wikipediaImageUrl || wikiInfo?.thumbnailUrl;
+  const displayDescription = wikiInfo?.description;
 
   const handleWikipediaPress = async () => {
     if (wikiInfo?.pageUrl) {
@@ -243,12 +236,12 @@ const styles = StyleSheet.create({
   },
   birdImage: {
     width: "100%",
-    height: 250,
+    height: 300,
     resizeMode: "cover",
   },
   placeholderImage: {
     width: "100%",
-    height: 250,
+    height: 300,
     backgroundColor: Colors.dark.icon,
     justifyContent: "center",
     alignItems: "center",
