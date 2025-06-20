@@ -18,8 +18,23 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "This app requires access to your microphone to record audio."
-      }
+        "NSMicrophoneUsageDescription": "This app requires access to your microphone to record audio.",
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "200.114.149.190": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSExceptionMinimumTLSVersion": "1.0"
+            },
+            "localhost": {
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            },
+            "192.168.0.189": {
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        }
+      },
+      "bundleIdentifier": "com.manu.chirpid"
     },
     "android": {
       "adaptiveIcon": {

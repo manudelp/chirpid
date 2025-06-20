@@ -82,6 +82,21 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
   const apiUrl = `${API_BASE_URL}/api/audio/upload`;
 
   try {
+    // Add connection test before upload
+    console.log(`Testing connection to: ${API_BASE_URL}`);
+    const pingResponse = await fetch(`${API_BASE_URL}/ping`, {
+      method: "GET",
+    });
+
+    if (!pingResponse.ok) {
+      throw new Error(
+        `Backend not reachable: ${pingResponse.status} ${pingResponse.statusText}`
+      );
+    }
+    console.log("Backend connection successful");
+
+    console.log(`Upload URL: ${apiUrl}`);
+
     const fileInfo = await FileSystem.getInfoAsync(uri);
     if (!fileInfo.exists) throw new Error("File does not exist");
 
@@ -95,10 +110,14 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
       type: "audio/wav",
     } as unknown as Blob);
 
+    console.log("Sending request to backend...");
     const response = await fetch(apiUrl, {
       method: "POST",
       body: formData,
     });
+
+    console.log(`Response status: ${response.status}`);
+
     if (!response.ok) {
       let errorMessage = `Upload failed with status ${response.status}`;
       try {
@@ -111,50 +130,10 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
       throw new Error(errorMessage);
     }
 
-    // For now, return a dummy response until backend logic is implemented
-    // TODO: Remove these dummy responses when backend returns real bird identification
-    const dummyResponses: UploadResponse[] = [
-      {
-        success: true,
-        id: `upload_${Date.now()}`,
-        message: "Bird identification completed",
-        result: {
-          species: "American Robin",
-          confidence: 0.87,
-          scientificName: "Turdus migratorius",
-        },
-      },
-      {
-        success: true,
-        id: `upload_${Date.now()}`,
-        message: "Bird identification completed",
-        result: {
-          species: "Northern Cardinal",
-          confidence: 0.92,
-          scientificName: "Cardinalis cardinalis",
-        },
-      },
-      {
-        success: true,
-        id: `upload_${Date.now()}`,
-        message: "Bird identification completed",
-        result: {
-          species: "Blue Jay",
-          confidence: 0.84,
-          scientificName: "Cyanocitta cristata",
-        },
-      },
-    ];
-
-    // Select a random response from the array
-    const dummyResponse =
-      dummyResponses[Math.floor(Math.random() * dummyResponses.length)];
-
-    // Simulate processing delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    return dummyResponse;
-    // return (await response.json()) as UploadResponse;
+    // Return real backend response
+    const result = (await response.json()) as UploadResponse;
+    console.log("Upload successful:", result);
+    return result;
   } catch (error) {
     console.error("Upload error:", error);
     if (error instanceof Error) {
