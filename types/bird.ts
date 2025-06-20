@@ -5,15 +5,7 @@ export interface BirdIdentification {
   confidence: number;
   timestamp: Date;
   audioUri?: string;
-  // Additional properties that can be expanded later
-  imageUrl?: string;
   wikipediaImageUrl?: string; // Wikipedia thumbnail image
-  habitat?: string;
-  diet?: string;
-  size?: string;
-  wingspan?: string;
-  description?: string;
-  conservationStatus?: string;
 }
 
 export interface BirdHistoryContextType {
