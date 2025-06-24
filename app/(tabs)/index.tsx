@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const [metering, setMetering] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const clearPolling = useRef<() => void | undefined>(undefined);
-  const recordingTimeout = useRef<number | null>(null);
+  const recordingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { addBirdToHistory } = useBirdHistory();
 
   useEffect(() => {
