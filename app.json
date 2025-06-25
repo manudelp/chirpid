@@ -4,13 +4,20 @@
     "slug": "chirpid",
     "version": "1.0.0",
     "runtimeVersion": "1.0.0",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "android": {
       "package": "com.manu.chirpid",
       "versionCode": 5,
-      "permissions": ["android.permission.RECORD_AUDIO"]
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-web-browser"
+    ],
     "extra": {
       "eas": {
         "projectId": "f857d214-ff90-4700-aa8a-785f925f1874"
