@@ -3,10 +3,11 @@
     "name": "ChirpID",
     "slug": "chirpid",
     "version": "1.0.0",
+    "runtimeVersion": "1.0.0",
     "platforms": ["android"],
     "android": {
       "package": "com.manu.chirpid",
-      "versionCode": 1,
+      "versionCode": 5,
       "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "plugins": ["expo-router"],
