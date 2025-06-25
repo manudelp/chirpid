@@ -33,7 +33,6 @@ export default function BirdDetailsScreen() {
     scientificName: params.scientificName as string,
     confidence: parseFloat(params.confidence as string),
     timestamp: new Date(params.timestamp as string),
-    description: params.description as string,
     wikipediaImageUrl: params.wikipediaImageUrl as string,
   };
 
