@@ -69,7 +69,7 @@ function AppContent() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />{" "}
+      <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <Stack
         screenOptions={{
           headerShown: false,

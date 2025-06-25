@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
@@ -83,11 +84,7 @@ const RecordButton: React.FC<RecordButtonProps> = ({
         hitSlop={Layout.hitSlop.lg}
       >
         {recording ? (
-          <Image
-            source={require("../../assets/images/logo-transparent.png")}
-            style={{ width: 120, height: 120, tintColor: "white" }}
-            resizeMode="contain"
-          />
+          <Ionicons name="stop" size={72} color={Colors.light.background} />
         ) : (
           <Image
             source={require("../../assets/images/logo-transparent.png")}
@@ -109,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   active: {
-    backgroundColor: Colors.dark.tint,
+    backgroundColor: Colors.dark.error,
   },
   inactive: {
     backgroundColor: Colors.light.background,

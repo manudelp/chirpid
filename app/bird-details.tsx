@@ -97,10 +97,7 @@ export default function BirdDetailsScreen() {
           <Ionicons name="arrow-back" size={24} color={Colors.dark.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Bird Details</Text>
-        <View style={styles.placeholder} />
-        <TouchableOpacity style={styles.backButton}>
-          <Ionicons name="share-outline" size={24} color={Colors.dark.text} />
-        </TouchableOpacity>
+        <View style={styles.placeholder} /> {/* Placeholder for centering */}
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
