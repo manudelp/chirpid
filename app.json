@@ -2,14 +2,14 @@
   "expo": {
     "name": "ChirpID",
     "slug": "chirpid",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "runtimeVersion": "1.0.0",
     "platforms": [
       "android"
     ],
     "android": {
       "package": "com.manu.chirpid",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ]
