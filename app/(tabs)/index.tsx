@@ -76,7 +76,9 @@ export default function HomeScreen() {
       setIsUploading(true);
       console.log("Uploading audio to backend...");
       const response = await uploadAudio(uri);
-      setRecordingUri(null); // Add bird to history if identification was successful
+      setRecordingUri(null);
+
+      // Add bird to history if identification was successful
       if (response.success && response.result) {
         addBirdToHistory({
           species: response.result.species,
@@ -111,6 +113,9 @@ export default function HomeScreen() {
       );
     } finally {
       setIsUploading(false);
+      setRecordingUri(null);
+      setIsRecording(false);
+      setMetering(null);
     }
   };
   return (
@@ -133,6 +138,7 @@ export default function HomeScreen() {
           ? "Send to identify the bird species"
           : "Point your device toward the bird and tap the button"}
       </Text>
+
       {/* Show record button when not uploading and no recording, or show send button when there's a recording */}
       {!recordingUri && !isUploading ? (
         <RecordButton

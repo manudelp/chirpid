@@ -83,7 +83,6 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
 
   try {
     // Add connection test before upload
-    console.log(`Testing connection to: ${API_BASE_URL}`);
     const pingResponse = await fetch(`${API_BASE_URL}/ping`, {
       method: "GET",
     });
@@ -93,9 +92,6 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
         `Backend not reachable: ${pingResponse.status} ${pingResponse.statusText}`
       );
     }
-    console.log("Backend connection successful");
-
-    console.log(`Upload URL: ${apiUrl}`);
 
     const fileInfo = await FileSystem.getInfoAsync(uri);
     if (!fileInfo.exists) throw new Error("File does not exist");
@@ -110,13 +106,10 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
       type: "audio/wav",
     } as unknown as Blob);
 
-    console.log("Sending request to backend...");
     const response = await fetch(apiUrl, {
       method: "POST",
       body: formData,
     });
-
-    console.log(`Response status: ${response.status}`);
 
     if (!response.ok) {
       let errorMessage = `Upload failed with status ${response.status}`;
@@ -132,10 +125,8 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
 
     // Return real backend response
     const result = (await response.json()) as UploadResponse;
-    console.log("Upload successful:", result);
     return result;
   } catch (error) {
-    console.error("Upload error:", error);
     if (error instanceof Error) {
       throw error;
     }
