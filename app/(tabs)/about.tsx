@@ -1,3 +1,4 @@
+import BackendStatusIndicator from "@/components/shared/BackendStatusIndicator";
 import { Colors } from "@/constants/Colors";
 import Layout from "@/constants/Layout";
 import { Stack } from "expo-router";
@@ -10,7 +11,10 @@ export default function AboutScreen() {
   const VERSION = "1.0.0";
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <Stack.Screen options={{ title: "About" }} />
 
       <View style={styles.header}>
@@ -42,6 +46,16 @@ export default function AboutScreen() {
       </View>
 
       <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Service Status</Text>
+        <View style={styles.statusContainer}>
+          <BackendStatusIndicator showText={true} size="medium" />
+          <Text style={styles.statusDescription}>
+            Service connection status. Tap to refresh.
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
         <Text style={styles.sectionTitle}>Key Features</Text>
         <View style={styles.featureList}>
           {[
@@ -68,9 +82,13 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.dark.background,
+  },
+  contentContainer: {
+    flexGrow: 1,
     paddingHorizontal: Layout.spacing.lg,
     paddingVertical: Layout.spacing.md,
-    backgroundColor: Colors.dark.background,
+    minHeight: "100%",
   },
   header: {
     alignItems: "center",
@@ -132,11 +150,27 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   footer: {
-    marginBottom: Layout.spacing.lg,
+    marginBottom: Layout.spacing.xl,
+    marginTop: Layout.spacing.lg,
     alignItems: "center",
+    paddingBottom: Layout.spacing.lg,
   },
   copyright: {
     fontSize: Layout.fontSizes.sm,
     color: Colors.dark.textTertiary,
+  },
+  statusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.dark.backgroundElevated,
+    borderRadius: Layout.borderRadius.md,
+    padding: Layout.spacing.md,
+    marginBottom: Layout.spacing.sm,
+  },
+  statusDescription: {
+    fontSize: Layout.fontSizes.sm,
+    color: Colors.dark.textSecondary,
+    marginLeft: Layout.spacing.md,
+    flex: 1,
   },
 });

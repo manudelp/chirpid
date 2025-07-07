@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BackendStatusIndicator from "./BackendStatusIndicator";
 
 export default function TabsHeader() {
   const { setHistoryVisible, history } = useBirdHistory();
@@ -23,6 +24,7 @@ export default function TabsHeader() {
             }}
           />
           <Text style={styles.title}>ChirpID</Text>
+          <BackendStatusIndicator size="small" />
         </View>
         <TouchableOpacity
           style={styles.historyButton}

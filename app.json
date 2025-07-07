@@ -4,25 +4,21 @@
     "slug": "chirpid",
     "version": "0.1.0",
     "runtimeVersion": "1.0.0",
-    "platforms": [
-      "android"
-    ],
+    "scheme": "chirpid",
+    "platforms": ["android"],
     "android": {
       "package": "com.manu.chirpid",
       "versionCode": 6,
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
-    "plugins": [
-      "expo-router",
-      "expo-web-browser",
-      "expo-audio"
-    ],
+    "plugins": ["expo-router", "expo-web-browser", "expo-audio"],
     "extra": {
       "eas": {
         "projectId": "f857d214-ff90-4700-aa8a-785f925f1874"
       }
+    },
+    "env": {
+      "EXPO_PUBLIC_API_URL": "https://api.chirpid.com"
     }
   }
 }

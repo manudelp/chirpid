@@ -20,7 +20,8 @@ interface PingResponse {
   message: string;
 }
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL!;
+const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL || "https://api.chirpid.com";
 
 if (!API_BASE_URL) {
   throw new Error(
@@ -120,6 +121,7 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
         // If response isn't JSON, use status text
         errorMessage = response.statusText || errorMessage;
       }
+
       throw new Error(errorMessage);
     }
 
