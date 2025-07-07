@@ -20,8 +20,7 @@ interface PingResponse {
   message: string;
 }
 
-const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL || "https://api.chirpid.com";
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5001";
 
 if (!API_BASE_URL) {
   throw new Error(
@@ -43,9 +42,22 @@ export async function pingBackend(): Promise<PingResponse> {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    return (await response.json()) as PingResponse;
+    const result = (await response.json()) as PingResponse;
+    return result;
   } catch (error) {
     console.error("Backend ping failed:", error);
+
+    // More specific error messages
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Network request failed")
+    ) {
+      throw new Error(
+        `Cannot connect to backend server at ${API_BASE_URL}. ` +
+          `Please check that the backend is running and accessible from your device.`
+      );
+    }
+
     throw new Error(
       `Network error: ${
         error instanceof Error ? error.message : "Unknown error"
@@ -129,6 +141,19 @@ export async function uploadAudio(uri: string): Promise<UploadResponse> {
     const result = (await response.json()) as UploadResponse;
     return result;
   } catch (error) {
+    console.error("Upload error:", error);
+
+    // Provide more specific error messages
+    if (
+      error instanceof TypeError &&
+      error.message.includes("Network request failed")
+    ) {
+      throw new Error(
+        `Cannot connect to backend server at ${API_BASE_URL}. ` +
+          `Please check that the backend is running and accessible from your device.`
+      );
+    }
+
     if (error instanceof Error) {
       throw error;
     }

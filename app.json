@@ -16,9 +16,6 @@
       "eas": {
         "projectId": "f857d214-ff90-4700-aa8a-785f925f1874"
       }
-    },
-    "env": {
-      "EXPO_PUBLIC_API_URL": "https://api.chirpid.com"
     }
   }
 }
